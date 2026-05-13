@@ -107,7 +107,9 @@ For multi-arch local builds you need a `docker buildx` setup with QEMU. The CI w
 
 ## Licenses
 
-This image is a thin assembly of Apache-2.0 / MIT components. See the upstream repos for full license text:
+The Dockerfile, CI workflow, and documentation in this repo are MIT-licensed; see [LICENSE](LICENSE).
+
+The built image bundles upstream binaries that keep their own licenses:
 
 - [caddyserver/caddy](https://github.com/caddyserver/caddy) — Apache-2.0
 - [lucaslorentz/caddy-docker-proxy](https://github.com/lucaslorentz/caddy-docker-proxy) — MIT
