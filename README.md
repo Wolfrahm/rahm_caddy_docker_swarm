@@ -30,7 +30,7 @@ The replica count becomes irrelevant to issuance correctness: there's always exa
 
 ### 3. HTTP-01 challenge response from any replica
 
-This is the subtle one. During HTTP-01 validation, Let's Encrypt GETs `http://example.com/.well-known/acme-challenge/<token>`. Whichever replica receives that request must respond with the right token — but with N replicas behind round-robin DNS or a host-mode port, the request can land on any one of them.
+During HTTP-01 validation, Let's Encrypt GETs `http://example.com/.well-known/acme-challenge/<token>`. Whichever replica receives that request must respond with the right token — but with N replicas behind round-robin DNS or a host-mode port, the request can land on any one of them.
 
 `certmagic-s3` writes the challenge token into S3 **before** telling LE to validate. When any replica receives the GET, it reads the token from S3 and responds. The replica that issued the order doesn't have to be the one that serves the challenge. No internal forwarding, no "issuer node" pinning, no synchronized in-memory state.
 
@@ -46,9 +46,7 @@ With this image, **none of that exists**. The full stack is a global `caddy` ser
 
 ## Usage
 
-Pair this image with the [`rahm_terraform_docker_swarm_caddy`](https://github.com/Wolfrahm/rahm_terraform_docker_swarm_caddy) Terraform module — it deploys this image as a global Swarm service plus a `tecnativa/docker-socket-proxy` for Docker API exposure.
-
-Standalone, the image accepts the same environment and Caddyfile a stock Caddy build does, plus the `caddy-docker-proxy` invocation as its default `CMD`:
+The image accepts the same environment and Caddyfile a stock Caddy build does, plus the `caddy-docker-proxy` invocation as its default `CMD`. Run it on a Swarm manager (or worker that can reach a manager's Docker socket via a TCP proxy) with credentials for the S3 bucket and the base Caddyfile mounted at `/etc/caddy/Caddyfile`:
 
 ```bash
 docker run --rm \
